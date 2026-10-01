@@ -1,7 +1,11 @@
 # LineTrace
 
-Line-level profiler for .NET, like Callgrind. Mark a method, run it, and get an HTML report with the
+LineTrace is a line-level profiler for .NET. Mark a method, run it, and get an HTML report showing the
 time and allocations of every call and every source line.
+
+**LineTrace is not an alternative to [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet).**
+BenchmarkDotNet is the right tool for comparing the overall performance of two methods.
+LineTrace answers the next question, Use BenchmarkDotNet to measure, LineTrace to improve
 
 ## Quick start
 
