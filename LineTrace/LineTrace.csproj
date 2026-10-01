@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <PackageId>LineTrace</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>Akshay Dhola</Authors>
+        <Description>Line-level .NET profiler: patches IL after build and writes an HTML report of time and allocations per method and per source line.</Description>
+        <PackageTags>profiler;performance;tracing;il;allocations</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);PackRewriter</TargetsForTfmSpecificContentInPackage>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Built with the package, shipped under tools/, never referenced at runtime. -->
+        <ProjectReference Include="..\LineTrace.Rewriter\LineTrace.Rewriter.csproj" ReferenceOutputAssembly="false" Private="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\build\LineTrace.targets" Pack="true" PackagePath="build\" />
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
+        <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <Target Name="PackRewriter">
+        <MSBuild Projects="..\LineTrace.Rewriter\LineTrace.Rewriter.csproj" Targets="GetTargetPath" Properties="Configuration=$(Configuration)">
+            <Output TaskParameter="TargetOutputs" PropertyName="_RewriterPath" />
+        </MSBuild>
+        <ItemGroup>
+            <_RewriterFile Include="$([System.IO.Path]::GetDirectoryName($(_RewriterPath)))\*.dll;$([System.IO.Path]::GetDirectoryName($(_RewriterPath)))\*.runtimeconfig.json" />
+            <TfmSpecificPackageFile Include="@(_RewriterFile)" PackagePath="tools\rewriter\%(Filename)%(Extension)" />
+        </ItemGroup>
+    </Target>
+
+</Project>

@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <LineTraceEnabled Condition="'$(LineTraceEnabled)' == ''">true</LineTraceEnabled>
+    <LineTraceDotnet Condition="'$(LineTraceDotnet)' == ''">$(DOTNET_HOST_PATH)</LineTraceDotnet>
+    <LineTraceDotnet Condition="'$(LineTraceDotnet)' == ''">dotnet</LineTraceDotnet>
+    <LineTraceRewriter Condition="'$(LineTraceRewriter)' == ''">$(MSBuildThisFileDirectory)../tools/rewriter/LineTrace.Rewriter.dll</LineTraceRewriter>
+  </PropertyGroup>
+
+  <Target Name="LineTracePatch" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(LineTraceEnabled)' == 'true'">
+    <ItemGroup>
+      <_LineTraceArg Include="&quot;$(TargetPath)=lines&quot;" />
+      <_LineTraceArg Include="@(LineTraceAssembly->'&quot;$(TargetDir)%(Identity).dll&quot;')" Condition="'%(LineTraceAssembly.Lines)' != 'true'" />
+      <_LineTraceArg Include="@(LineTraceAssembly->'&quot;$(TargetDir)%(Identity).dll=lines&quot;')" Condition="'%(LineTraceAssembly.Lines)' == 'true'" />
+    </ItemGroup>
+
+    <Exec Command="&quot;$(LineTraceDotnet)&quot; &quot;$(LineTraceRewriter)&quot; &quot;$(TargetDir)LineTrace.dll&quot; @(_LineTraceArg, ' ')" />
+  </Target>
+
+</Project>
