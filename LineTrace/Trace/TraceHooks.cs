@@ -49,7 +49,7 @@ public static class TraceHooks
         Tracer.Current?.PopExternal();
     }
 
-    public static TraceSession StartRoot(int iterations, bool measured) => Tracer.Start(iterations, measured);
+    public static TraceSession StartRoot(int iterations) => Tracer.Start(iterations, measured: true);
 
     public static void StopRoot(TraceSession session)
     {

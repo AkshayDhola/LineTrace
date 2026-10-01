@@ -42,7 +42,7 @@ internal static class HtmlTemplate
     public const string Notes = """
         </h1>
             <ul class="notes">
-              <li>Values are per iteration of the traced method, measured after its warm-up runs.</li>
+              <li>Values are averaged over all iterations of the traced method; the first (cold) run is included.</li>
               <li>Allocations are exact. Times have the tracer's own overhead removed but come from patched code (try/finally and hook calls in every method), so compare shares, not absolute numbers.</li>
               <li>Self excludes calls into other methods; a line's Time and Alloc include the calls made on it. For recursive methods only Self is exact, and GC pauses land on the lines that allocate.</li>
               <li>Hook-cost subtraction leaves a few ns of noise per call; times inside that noise show as 0.</li>
